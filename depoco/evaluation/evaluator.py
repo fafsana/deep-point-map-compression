@@ -1,5 +1,7 @@
 import torch
-import chamfer3D.dist_chamfer_3D
+import sys
+sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+import dist_chamfer_3D
 
 import depoco.evaluation.occupancy_grid as occupancy_grid
 import numpy as np
@@ -10,7 +12,7 @@ import torch.nn as nn
 class Evaluator():
     def __init__(self, config):
         self.config = config
-        self.cham_loss = chamfer3D.dist_chamfer_3D.chamfer_3DDist()
+        self.cham_loss = dist_chamfer_3D.chamfer_3DDist()
         self.running_loss = 0.0
         self.n = 0
         self.eval_results = defaultdict(list)

@@ -2,11 +2,13 @@ import torch
 
 # import depoco.sample_net_trainer as snt
 import depoco.architectures.original_kp_blocks as okp
-import chamfer3D.dist_chamfer_3D
+import sys
+sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+import dist_chamfer_3D
 import depoco.architectures.network_blocks as network_blocks
 
 def linDeconvRegularizer(net, weight,gt_points):
-    cham_loss = chamfer3D.dist_chamfer_3D.chamfer_3DDist()
+    cham_loss = dist_chamfer_3D.chamfer_3DDist()
     loss = torch.tensor(
             0.0, dtype=torch.float32, device=gt_points.device)  # init loss
     for m in net.modules():

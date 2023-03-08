@@ -13,7 +13,9 @@ from torch.utils.tensorboard import SummaryWriter
 from ruamel import yaml
 import argparse
 import depoco.architectures.network_blocks as network
-import chamfer3D.dist_chamfer_3D
+import sys
+sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+import dist_chamfer_3D
 
 import depoco.utils.point_cloud_utils as pcu
 import subprocess
@@ -50,7 +52,7 @@ class DepocoNetTrainer():
         ##################################
         ########## Loss Attributes #######
         ##################################
-        self.cham_loss = chamfer3D.dist_chamfer_3D.chamfer_3DDist()
+        self.cham_loss = dist_chamfer_3D.chamfer_3DDist()
         self.pairwise_dist = nn.PairwiseDistance()
         self.l2_loss = nn.MSELoss(reduction='mean')
         self.w_transf2map = self.config['train']['loss_weights']['transf2map']
