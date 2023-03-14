@@ -3,10 +3,10 @@
 ################################################################################
 train:
   experiment_id: "test"
-  max_epochs: 200
+  max_epochs: 100
   use_adam: True
   batch_size: 3 # batch size
-  max_nr_pts: 30000 # nr points
+  max_nr_pts: 2500 # nr points
   workers: 0 # number of threads to get data
   optimizer: # Adam
     start_lr: 0.000001 # start learning rate
@@ -114,14 +114,9 @@ dataset:
     prefix: "/content/deep-point-map-compression/depoco/config/kitti/" #only needed for Kitti2Submap conversion (kitti-format)
     train: 
       - "00"
-      - "01"
       - "02"
-      - "03"
       - "04"
       - "05"
-      - "06"
-      - "07"
-      - "09"
       - "10"
     valid:
       - "validation"

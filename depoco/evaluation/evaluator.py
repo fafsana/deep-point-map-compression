@@ -1,6 +1,6 @@
 import torch
 import sys
-sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/')
 import dist_chamfer_3D
 
 import depoco.evaluation.occupancy_grid as occupancy_grid
