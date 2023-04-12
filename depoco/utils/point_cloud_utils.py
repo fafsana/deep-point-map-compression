@@ -157,7 +157,7 @@ def saveCloud2Binary(cld, file, out_path=None):
 ##for lider data
 def loadCloudFromBinary(file, cols=3):
     
-    print(file)
+    #print(file)
     f = open(file, "rb")
     binary_data = f.read()
     f.close()

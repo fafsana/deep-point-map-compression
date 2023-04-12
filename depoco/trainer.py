@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
+import gc
+#del variables
+
+
 import depoco.datasets.submap_handler as submap_handler
 import depoco.evaluation.evaluator as evaluator
 import torch
+#torch.cuda.empty_cache()
 import time
 import numpy as np
 import torch.nn as nn
@@ -371,6 +376,8 @@ class DepocoNetTrainer():
 
 if __name__ == "__main__":
     print('Hello')
+    gc.collect()
+    torch.cuda.empty_cache()
     parser = argparse.ArgumentParser("./sample_net_trainer.py")
     parser.add_argument(
         '--config', '-cfg',

@@ -31,11 +31,15 @@ class SubMapParser():
         # print('valid folders',self.valid_folders)
         self.test_folders = [pcu.path(out_path)+pcu.path(
             fldid) for fldid in config["dataset"]["data_folders"]["test"]] if config["dataset"]["data_folders"]["test"] else []
-        cols = 3+sum(config['grid']['feature_dim'])
+        #commented by fafsan
+        #cols = 3+sum(config['grid']['feature_dim'])
+        cols = 3 
         # Trainingset
         self.train_dataset = SubMapDataSet(data_dirs=self.train_folders,
                                            nr_submaps=nr_submaps,
-                                           nr_points=config['train']['max_nr_pts'], cols=cols, on_the_fly=True,
+                                           nr_points=config['train']['max_nr_pts'], 
+                                           cols=cols, 
+                                           on_the_fly=True,
                                            grid_size=np.max(self.grid_size))
         self.train_sampler = SubMapSampler(nr_submaps=len(self.train_dataset),
                                            sampling_method=config['train']['sampling_method'])
@@ -175,6 +179,9 @@ class SubMapDataSet(Dataset):
         self.nr_submaps = nr_submaps
         self.nr_points = nr_points
         self.cols = cols
+        print("cols -> " + str(cols))
+        #raise ValueError('trying to see stack trace')
+        
         self.init_ones = init_ones
         self.fc = feature_cols
         self.submaps = createSubmaps(
