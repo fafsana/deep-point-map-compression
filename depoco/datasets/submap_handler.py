@@ -141,6 +141,8 @@ class SubMapSampler(Sampler):
 
         self.sample_fkt = getattr(self, sampling_method)
         self.p_func = torch.ones(self.nr_submaps, dtype=torch.float)
+        print("i am here")
+        print(self.p_func)
         self.dist = torch.distributions.Categorical(self.p_func)
 
     def setSampleProbs(self, probs):

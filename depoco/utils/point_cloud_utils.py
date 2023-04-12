@@ -154,8 +154,10 @@ def saveCloud2Binary(cld, file, out_path=None):
     f.write(cld.astype('float32').T.tobytes())
     f.close()
 
-
+##for lider data
 def loadCloudFromBinary(file, cols=3):
+    
+    print(file)
     f = open(file, "rb")
     binary_data = f.read()
     f.close()
@@ -163,6 +165,14 @@ def loadCloudFromBinary(file, cols=3):
         binary_data, dtype='float32', count=-1)
     data = np.reshape(temp, (cols, int(temp.size/cols)))
     return data.T
+
+##for mpeg data 
+#def loadCloudFromBinary(file, cols=3):
+#    print ("I am here")
+#    pcd = o3d.io.read_point_cloud(file) # Read the point cloud
+#    temp = np.asarray(pcd.points)
+#    data = np.reshape(temp, (cols, int(temp.size/cols)))
+#    return data.T
 
 
 def colorizeConv(in_pcl:np.ndarray, out_pcl:np.ndarray, kernel_radius, max_nr_neighbors,kernel_pos=None, kernel_points=None):
