@@ -32,8 +32,8 @@ class SubMapParser():
         self.test_folders = [pcu.path(out_path)+pcu.path(
             fldid) for fldid in config["dataset"]["data_folders"]["test"]] if config["dataset"]["data_folders"]["test"] else []
         #commented by fafsan
-        #cols = 3+sum(config['grid']['feature_dim'])
-        cols = 3 
+        cols = 3+sum(config['grid']['feature_dim'])
+        #cols = 3 
         # Trainingset
         self.train_dataset = SubMapDataSet(data_dirs=self.train_folders,
                                            nr_submaps=nr_submaps,
