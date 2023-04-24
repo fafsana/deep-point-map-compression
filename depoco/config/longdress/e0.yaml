@@ -43,9 +43,9 @@ grid:
   min_range: 2.0
   #features: ['intensity','label','eigenvalues','normals']
   #feature_dim: [1,1,3,3]
-  features: ['points']
-  feature_dim: [3]
-  normal_eigenvalue_radius: 0.5 # radius for computing normals and the eigenvalues
+  features: ['colors','eigenvalues','normals']
+  feature_dim: [3,3,3]
+  normal_eigenvalue_radius: 1.25 # radius for computing normals and the eigenvalues
 
 evaluation:
   float16: True
