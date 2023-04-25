@@ -3,10 +3,10 @@
 ################################################################################
 train:
   experiment_id: "ld_e0"
-  max_epochs: 2 #100
+  max_epochs: 200
   use_adam: True
   batch_size: 3 # batch size
-  max_nr_pts: 200 #3000 # nr points
+  max_nr_pts: 3000 # nr points
   workers: 0 # number of threads to get data
   optimizer: # Adam
     start_lr: 0.000001 # start learning rate
