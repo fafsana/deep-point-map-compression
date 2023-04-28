@@ -3,7 +3,7 @@
 ################################################################################
 train:
   experiment_id: "ld_e0"
-  max_epochs: 200
+  max_epochs: 100
   use_adam: True
   batch_size: 3 # batch size
   max_nr_pts: 3000 # nr points
