@@ -9,6 +9,7 @@ def plotResults(files, x_key, y_key, ax, draw_line=False, label=None, set_lim=Tr
     x = []
     y = []
     for f in files:
+        print(f)
         eval_dict = pcu.load_obj(f)
         if((x_key in eval_dict.keys()) & (y_key in eval_dict.keys())):
             for v in eval_dict.values():

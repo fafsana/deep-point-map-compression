@@ -3,7 +3,7 @@
 ################################################################################
 train:
   experiment_id: "longdress_test"
-  max_epochs: 100
+  max_epochs: 3
   use_adam: True
   batch_size: 3 # batch size
   max_nr_pts: 2500 # nr points
@@ -50,7 +50,8 @@ evaluation:
   iou_grid:
     resolution: [0.2,0.2,0.1]
   f_score_dist: 0.1 # distance for being outlier
-  out_dir: '/content/deep-point-map-compression/depoco/experiments/results/longdress'
+  out_dir: '/home/afz/Downloads/depoco/deep-point-map-compression/depoco/experiments/results/longdress/'
+  
 ################################################################################
 # Network parameters
 ################################################################################
@@ -103,15 +104,15 @@ network:
         out_fdim:   3
         relu: False
         batchnorm: False
-  out_dir: "/content/deep-point-map-compression/depoco/network_files/"
+  out_dir: "/home/afz/Downloads/depoco/deep-point-map-compression/depoco/network_files/"
 
 ################################################################################
 # dataset (to find parser)
 ################################################################################
 dataset:
   data_folders:
-    #grid_output: "/content/sample_data/40m_ILEN/" #path/to/the/submaps/
-    grid_output: "/content/longdress_subsample/longdress_subsample/" #path/to/the/submaps/
+    #grid_output: "/home/afz/Downloads/depoco/data/submaps/40m_ILEN/" #path/to/the/submaps/
+    grid_output: "/home/afz/Downloads/depoco/data/submaps/40m_ILEN/" #path/to/the/submaps/
     prefix: "/content/deep-point-map-compression/depoco/config/kitti/" #only needed for Kitti2Submap conversion (kitti-format)
     train: 
       - "00"

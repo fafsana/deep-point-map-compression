@@ -3,7 +3,7 @@ import torch
 # import depoco.sample_net_trainer as snt
 import depoco.architectures.original_kp_blocks as okp
 import sys
-sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+sys.path.append('/home/afz/Downloads/depoco/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
 import dist_chamfer_3D
 import depoco.architectures.network_blocks as network_blocks
 

@@ -12,7 +12,7 @@ def path(text):
     '''
         adds "/" to the end if needed
     '''
-    if text is "":
+    if text == "":
         return ""
     if(text.endswith('/')):
         return text

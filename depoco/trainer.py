@@ -19,7 +19,7 @@ from ruamel import yaml
 import argparse
 import depoco.architectures.network_blocks as network
 import sys
-sys.path.append('/content/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
+sys.path.append('/home/afz/Downloads/depoco/deep-point-map-compression/submodules/ChamferDistancePytorch/chamfer3D/dist_chamfer_3D.py')
 import dist_chamfer_3D
 
 import depoco.utils.point_cloud_utils as pcu
@@ -28,6 +28,7 @@ import subprocess
 # import depoco.utils.checkpoint as chkpt
 import depoco.architectures.loss_handler as loss_handler
 from tqdm.auto import trange, tqdm
+
 
 
 class DepocoNetTrainer():
@@ -119,8 +120,17 @@ class DepocoNetTrainer():
         return self.evaluate(self.submaps.getTestSet(),
                              load_model=True,
                              best_model=best,
-                             reference_points='map',
+                             reference_points='points',
                              compute_memory=True, evaluate=True)
+    
+    def test_tmc13(self, best=True):
+        # TEST
+        return self.evaluate_tmc13(self.submaps.getTestSet(),
+                             load_model=True,
+                             best_model=best,
+                             reference_points='points',
+                             compute_memory=True, evaluate=True)
+
 
     def getNetworkParams(self):
         return list(self.encoder_model.parameters()) + list(self.decoder_model.parameters())
@@ -350,6 +360,86 @@ class DepocoNetTrainer():
         self.decoder_model.train()
 
         return loss_evaluator.eval_results
+    
+
+
+    def evaluate_tmc13(self, dataloader,
+                 load_model=False,
+                 best_model=False,
+                 reference_points='points',
+                 compute_memory=False,
+                 evaluate=False):
+        loss_evaluator = evaluator.Evaluator(self.config)
+        self.encoder_model.eval()
+        self.decoder_model.eval()
+        with torch.no_grad():
+            if load_model:
+                self.loadModel(best=best_model)
+                self.encoder_model.to(self.device)
+                self.decoder_model.to(self.device)
+                print('loaded best:', best_model)
+            for i, input_dict in enumerate(tqdm(dataloader)):
+                map_idx = input_dict['idx']
+                #print('map:', map_idx)
+                scale = input_dict['scale']
+                input_dict['features'] = input_dict['features'].to(self.device)
+                input_dict['points'] = input_dict['points'].to(self.device)
+                
+                ####### Cast to float16 if necessary #######
+                out_dict = self.encoder_model(input_dict.copy())
+                if self.config['evaluation']['float16']:
+                    out_dict['points'] = out_dict['points'].half().float()
+                    out_dict['features'] = out_dict['features'].half().float()
+                ####### Compute  Memory #######
+                if compute_memory:
+                    nbytes = 2 if self.config['evaluation']['float16'] else 4
+                    mem = (out_dict['points'].numel() +
+                           out_dict['features'].numel())*nbytes
+                    loss_evaluator.eval_results['memory'].append(mem)
+                    loss_evaluator.eval_results['bpp'].append(
+                        mem/input_dict['map'].shape[0]*8)
+                ############# Decoder ##################
+                out_dict = self.decoder_model(out_dict)
+                translation = out_dict['features'][:, :3]
+                samples = out_dict['points']
+                samples_transf = samples+translation
+
+                ###################################
+                gt_points = input_dict[reference_points].to(self.device)
+
+                # Scale to metric space
+                samples_transf *= scale
+                samples *= scale
+                translation *= scale
+                gt_points *= scale
+
+                #print("gt_points", np.asarray(gt_points).shape)
+                #print("gt_points", np.asarray(samples_transf).shape)
+
+                reconstruction_error = loss_evaluator.chamferDist(
+                    gt_points=gt_points, source_points=samples_transf)
+                loss_evaluator.eval_results['mapwise_reconstruction_error'].append(
+                    reconstruction_error.item())
+
+                if evaluate:  # Full evaluation for testing
+                    feat_ind = np.cumsum(
+                        [0]+self.config['grid']['feature_dim'])
+                    normal_idx = pcu.findList(
+                        self.config['grid']['features'], value='normals')
+                    normal_idx = (feat_ind[normal_idx], feat_ind[normal_idx+1])
+                    gt_normals = input_dict[reference_points +
+                                            '_attributes'][:, normal_idx[0]:normal_idx[1]].cuda()
+                    
+                    
+                    #print("gt_normals", np.asarray(gt_normals))
+                    loss_evaluator.evaluate(
+                        gt_points=gt_points, source_points=samples_transf, gt_normals=gt_normals)
+            chamfer_dist = loss_evaluator.getRunningLoss()
+            loss_evaluator.eval_results['reconstruction_error'] = chamfer_dist
+        self.encoder_model.train()
+        self.decoder_model.train()
+
+        return loss_evaluator.eval_results
 
     def encodeDecode(self, input_dict, float_16=True):
         map_idx = input_dict['idx']
@@ -367,17 +457,31 @@ class DepocoNetTrainer():
         ############# Decoder ##################
         out_dict = self.decoder_model(out_dict)
         translation = out_dict['features'][:, :3]
+        
+        print("out_dict[features]" , out_dict['features'])
+        
+        print("translation" , translation)
+
         samples = out_dict['points']
+
+        print("points" , samples)
+
         samples_transf = samples+translation
+
+        print("samples_transf" , samples_transf)
+
 
         samples_transf *= scale
         return samples_transf, nr_emb
 
 
 if __name__ == "__main__":
-    print('Hello')
+
+    print('Hello... Cleaning Cache !!!')
+    
     gc.collect()
     torch.cuda.empty_cache()
+    
     parser = argparse.ArgumentParser("./sample_net_trainer.py")
     parser.add_argument(
         '--config', '-cfg',

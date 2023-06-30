@@ -4,12 +4,13 @@ import octree_handler
 
 # Read .ply file
 cols = 3 
-input_file = "/content/longdress_subsample/longdress_subsample/00_ply/000001.ply"
+input_file = "/home/afz/Downloads/depoco/tmc_13/mpeg-pcc-tmc13/experiment/lossy-geom-no-attrs/longdress_viewdep_vox12/r01/longdress_viewdep_vox12.ply.bin.decoded.ply"
 pcd = o3d.io.read_point_cloud(input_file) # Read the point cloud
+
 
 # Visualize the point cloud within open3d
 #o3d.visualization.draw_geometries = draw_geometries # replace function
-#o3d.visualization.draw_geometries([pcd]) 
+o3d.visualization.draw_geometries([pcd]) 
 
 # Convert open3d format to numpy array
 # Here, you have the point cloud in numpy format. 
